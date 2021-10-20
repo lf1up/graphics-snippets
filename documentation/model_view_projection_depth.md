@@ -1,3 +1,7 @@
+[![StackOverflow](https://stackexchange.com/users/flair/7322082.png)](https://stackoverflow.com/users/5577765/rabbid76?tab=profile)
+
+---
+
 <!-- TOC -->
 
 - [Model, View, Projection and Depth](#model-view-projection-and-depth)
@@ -105,7 +109,7 @@ In general world coordinates and view coordinates are [Cartesian coordinates](ht
   
 The view coordinates system describes the direction and position from which the scene is looked at. The view matrix transforms from the world space to the view (eye) space.
 
-If the coordinate system of the view space is a [Right-handed](https://en.wikipedia.org/wiki/Right-hand_rule) system, where the X-axis points to the right and the Y-axis points up, then the Z-axis points out of the view (Note in a right hand system the Z-Axis is the cross product of the X-Axis and the Y-Axis).
+If the coordinate system of the view space is a [Right-handed](https://en.wikipedia.org/wiki/Right-hand_rule) system, where the X-axis points to the right and the Y-axis points up, then the Z-axis points against the line of sight (Note in a right hand system the Z-Axis is the cross product of the X-Axis and the Y-Axis).
 
 ![view coordinates](image/view_coordinates.png)
 
@@ -153,7 +157,7 @@ See also:
 
 ## View
 
-On the viewport the X-axis points to the left, the Y-axis up and the Z-axis out of the view (Note in a c the Z-Axis is the cross product of the X-Axis and the Y-Axis).
+On the viewport the X-axis points to the left, the Y-axis up and the Z-axis against the line of sight (Note in a c the Z-Axis is the cross product of the X-Axis and the Y-Axis).
 
 The code below defines a matrix that exactly encapsulates the steps necessary to calculate a look at the scene:
 
@@ -319,8 +323,9 @@ float depth = (((farZ-nearZ) * ndc_depth) + nearZ + farZ) / 2.0;
 
 ## Orthographic Projection
 
-At Orthographic Projection, the view space coordinates are linearly mapped to the clip space coordinates. The clip space coordinates are equal to the normalized device coordinates, because the `w` component is 1 (for a cartesian input coordinate).  
-The values for left, right, bottom, top, near and far define a box. All the geometry which is inside the volume of the box is "visible" on the viewport.
+When using Orthographic Projection, the view space coordinates are mapped linearly to the clip space coordinates. The clip space coordinates are equal to the normalized device coordinates, because the `w` component is 1 (for a cartesian input coordinate).  
+The viewing volume is defined by 6 distances (left, right, bottom, top, near, far). The values for left, right, bottom, top, near and far define a cuboid (box). All of the geometry that is within the volume of the box is projected onto the two-dimensional viewport and is "visible". All geometry that is outside this volume is clipped.  
+If you want to use orthographic projection, you need to define the area (cuboid volume) of your scene that you want to show in the viewport. This area indicates the 6 distances for the orthographic projection. If your viewport is rectangular and you want to keep the aspect ratio, the _xy_ plane of the viewing volume volume must also be rectangular. The ratio of the _xy_ plane must match the ratio of the viewport.
 
 ![Orthographic Projection](image/OrthographicProjection.png)
 
@@ -335,7 +340,7 @@ z:    0               0               -2/(f-n)        0
 t:    -(r+l)/(r-l)    -(t+b)/(t-b)    -(f+n)/(f-n)    1
 ```
 
-At Orthographic Projection, the Z component is calculated by the **linear function**:
+In Orthographic Projection, the Z component is calculated by the **linear function**:
 
 ```txt
 z_ndc = z_eye * -2/(f-n) - (f+n)/(f-n)
@@ -347,7 +352,7 @@ z_ndc = z_eye * -2/(f-n) - (f+n)/(f-n)
 
 ## Perspective Projection
 
-At Perspective Projection the projection matrix describes the mapping from 3D points in the world as they are seen from of a pinhole camera, to 2D points of the viewport.  
+In perspective projection, the projection matrix describes the mapping of 3D points in the world, as seen from a pinhole camera, onto 2D points in the viewport. 
 The eye space coordinates in the camera frustum (a truncated pyramid) are mapped to a cube (the normalized device coordinates).
 
 ![near far plane](image/perspective.png)
@@ -705,7 +710,7 @@ vec3 viewUpperRight  = viewUpperRightH.xyz / viewUpperRightH.w;
 
 If you do not transform the vertex coordinates (or transform it by the [Identity matrix](https://en.wikipedia.org/wiki/Identity_matrix)), then you directly set the coordinates in normalized device space. The NDC is a unique cube, with the left, bottom, near of (-1, -1, -1) and the right, top, far of (1, 1, 1). That means the X-axis is to the right, the Y-axis is upwards and the Z-axis points into the view.  
 
-In common the OpenGL coordinate system is a [Right-handed](https://en.wikipedia.org/wiki/Right-hand_rule) system. In view space the X-axis points to the right and the Y-axis points up.  
+In general the OpenGL coordinate system is a [Right-handed](https://en.wikipedia.org/wiki/Right-hand_rule) system. In view space the X-axis points to the right and the Y-axis points up.  
 Since the Z-axis is the [Cross product](https://en.wikipedia.org/wiki/Cross_product) of the X-axis and the Y-axis, it points out of the viewport and appears to be inverted.  
 
 To compensate the difference in the direction of the Z-axis in view space in compare to normalized device space the Z-axis has to be inverted.  

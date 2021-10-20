@@ -1,3 +1,6 @@
+[![StackOverflow](https://stackexchange.com/users/flair/7322082.png)](https://stackoverflow.com/users/5577765/rabbid76?tab=profile)
+
+---
 
 <!-- TOC -->
 
@@ -97,7 +100,7 @@ You have to set the texture minifying function (`GL_TEXTURE_MIN_FILTER`) by [`gl
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 ```  
 
-If you do not generate [mipmaps](https://en.wikipedia.org/wiki/Mipmap) (by [`glGenerateMipmap`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenerateMipmap.xhtml)), then setting the `GL_TEXTURE_MIN_FILTER` is important. Since the default filter is `GL_NEAREST_MIPMAP_LINEAR` the texture would be mipmap incomplete, if you don not change the minifying function to `GL_NEAREST` or `GL_LINEAR`.
+If you are not generating [mipmaps](https://en.wikipedia.org/wiki/Mipmap) (with [`glGenerateMipmap`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenerateMipmap.xhtml)) it is important to set `GL_TEXTURE_MIN_FILTER`. Since the default filter is `GL_NEAREST_MIPMAP_LINEAR`, the texture would be "Mipmap Incomplete" if you do not change the minimize function to `GL_NEAREST` or `GL_LINEAR`.
 
 ### `glBindTexture`
 
@@ -172,11 +175,10 @@ const char *filename = .....; // path and filename
 int         req_channels = 3; // 3 color channels of BMP-file   
 
 int width = 0, height = 0, channels = 0;
-stbi_uc *image = stbi_load( filename, &width, &height, &channels, 3 );
+stbi_uc *image = stbi_load(filename, &width, &height, &channels, req_channels);
 ```
 
-When the image is loaded to a texture object, then [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) has to be set to 1.  
-By default `GL_UNPACK_ALIGNMENT` is 4, so each line of an image is assumed to be aligned to 4 bytes. The pixels of a BMP-file in common have a size of 3 bytes and are tightly packed, this would cause a misalignment.<br/>
+When an RGB image is loaded to a texture object, GL_UNPACK_ALIGNMENT needs to be set to 1. By default GL_UNPACK_ALIGNMENT is 4, so each line of an image is assumed to be aligned to 4 bytes. The pixels in the buffer have a size of 3 bytes and are tightly packed, this would cause a misalignment.
 After loading the image, the memory on the can be freed by `stbi_image_free`:  
 
 ```cpp
@@ -221,42 +223,6 @@ See [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h):
 
 ---
 
-[C++ SOIL does not load small images](https://stackoverflow.com/questions/55208514/c-soil-does-not-load-small-images/55208624#55208624)
-
-When the image is loaded to a texture object, then [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) has to be set to 1: 
-
-```cpp
-glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-```
-
-Note, by default the parameter is 4. This means that each line of the image is assumed to be aligned to a size which is a multiple of 4. Since the image data are tightly packed and each pixel has a size of 3 bytes, the alignment has to be changed.
-
-When the size of the image is 40 x 50 then the size of a line in bytes is 120, which is divisible by 4.  
-But if the size of the image is 30 x 40, the the size of a line in bytes is 90, which is not divisible by 4.
-
----
-
-[OpenGL 2D textures not displaying properly c++](https://stackoverflow.com/questions/55482364/opengl-2d-textures-not-displaying-properly-c/55482415#55482415), [C++]  
-
-When a RGB image with 3 color channels is loaded to a texture object, then [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) has to be set to 1: 
-
-<!-- language: cpp -->
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, imageData);
-
-`GL_UNPACK_ALIGNMENT` specifies the alignment requirements for the start of each pixel row in memory. By default `GL_UNPACK_ALIGNMENT` is set to 4.
-This means the start of each line of the image is assumed to be aligned to an address which is a multiple of 4. Since the image data are tightly packed and each pixel has a size of 3 bytes, the alignment has to be changed.
-
-To proper read the image the last parameter of `stbi_load` has to be 0 (since the jpg format provides 3 color channesl) or 3 (to force 3 color channels):
-
-    unsigned char* imageData = stbi_load(filePath.c_str(),
-         &width, &height, &numComponents, 0);
-
----
-
 `stbi_load` can be forced to generate an image with 4 color channels, by explicitly pass 4 to the last parameter:
 
 See [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h):
@@ -291,7 +257,25 @@ A [Windows Bitmap](https://de.wikipedia.org/wiki/Windows_Bitmap) file has a file
 
 ## Texture alignment (GL_UNPACK_ALIGNMENT, GL_PACK_ALIGNMENT)
 
+[Calculating texture coordinates from a heightmap](https://stackoverflow.com/questions/55739024/calculating-texture-coordinates-from-a-heightmap/55739265#55739265), [C++]  
+
+**By default OpenGL assumes that the start of each row of an image is aligned to 4 bytes**.
+
+**This is because the [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) parameter by default is 4. Since the image has 3 color channels (`GL_RGB`), and is tightly packed the size of a row of the image may not be aligned to 4 bytes**.  
+**When a RGB image with 3 color channels is loaded to a texture object and 3*width is not divisible by 4, [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) has to be set to 1, before specifying the texture image with  `glTexImage2D`**:
+
+```cpp
+glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
+             GL_RGB, GL_UNSIGNED_BYTE, this->diffuseData);
+             
+``` 
+
+The diffuse image in the question has a dimension of 390x390. So each row of the image has a size of `390 * 3 = 1170` bytes.  
+Since 1170 is not divisible by 4 (`1170 / 4 = 292,5`), the start of a row is not aligned to 4 bytes.
+
 [Failing to map a simple unsigned byte rgb texture to a quad](https://stackoverflow.com/questions/46202452/failing-to-map-a-simple-unsigned-byte-rgb-texture-to-a-quad/46203044#46203044), [C++] [GLSL]  
+![Failing to map a simple unsigned byte rgb texture to a quad](https://i.stack.imgur.com/zlGqd.png)
 
 `GL_UNPACK_ALIGNMENT` specifies the alignment requirements for the start of each pixel row in memory. By default `GL_UNPACK_ALIGNMENT` is set to 4.
 This means the start of each line of the image is assumed to be aligned to an address which is a multiple of 4.
@@ -336,24 +320,63 @@ Since the image has 3 color channels (because its a JPG), and is tightly packed 
 
 ---
 
-[Calculating texture coordinates from a heightmap](https://stackoverflow.com/questions/55739024/calculating-texture-coordinates-from-a-heightmap/55739265#55739265), [C++]  
+[glTexImage2D data not filled as expected](https://stackoverflow.com/questions/66221801/glteximage2d-data-not-filled-as-expected/66221832#66221832)  
 
-By default OpenGL assumes that the start of each row of an image is aligned to 4 bytes.
+If an RGB image with 3 color channels is loaded into a texture object, [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) must be set to 1:
 
-This is because the [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) parameter by default is 4.
+```py
+gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, 1)
+gl.glTexImage2D(gl.GL_TEXTURE_2D, 0, iformat, width, height, 0, iformat, gl.GL_UNSIGNED_BYTE, image)
+```
 
-Since the image has 3 color channels (`GL_RGB`), and is tightly packed the size of a row of the image may not be aligned to 4 bytes.
+`GL_UNPACK_ALIGNMENT` specifies the alignment requirements for the start of each pixel row in memory. By default `GL_UNPACK_ALIGNMENT` is set to 4.
+This means the start of each line of the image is assumed to be aligned to an address which is a multiple of 4. Since the image data is tightly packed and each pixel is 3 bytes in size, the alignment has to be changed.  
+If the width of the image is divisible by 4 (more exactly if `3*width` is divisible by 4) then the error is not noticeable.
 
-When a RGB image with 3 color channels is loaded to a texture object, then [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) has to be set to 1: 
+Since you are reading back the texture from the GPU, you also need to change `GL_PACK_ALIGNMENT`:
+
+```py
+gl.glPixelStorei(gl.GL_PACK_ALIGNMENT, 1)
+p = gl.glGetTexImage(gl.GL_TEXTURE_2D, 0, iformat, gl.GL_UNSIGNED_BYTE)
+```
+
+---
+
+[C++ SOIL does not load small images](https://stackoverflow.com/questions/55208514/c-soil-does-not-load-small-images/55208624#55208624)
+
+When the image is loaded to a texture object, then [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) has to be set to 1: 
 
 ```cpp
 glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
-             GL_RGB, GL_UNSIGNED_BYTE, this->diffuseData);
-``` 
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+```
 
-The diffuse image in the question has a dimension of 390x390. So each row of the image has a size of `390 * 3 = 1170` bytes.  
-Since 1170 is not divisible by 4 (`1170 / 4 = 292,5`), the start of a row is not aligned to 4 bytes.
+Note, by default the parameter is 4. This means that each line of the image is assumed to be aligned to a size which is a multiple of 4. Since the image data are tightly packed and each pixel has a size of 3 bytes, the alignment has to be changed.
+
+When the size of the image is 40 x 50 then the size of a line in bytes is 120, which is divisible by 4.  
+But if the size of the image is 30 x 40, the the size of a line in bytes is 90, which is not divisible by 4.
+
+---
+
+[OpenGL 2D textures not displaying properly c++](https://stackoverflow.com/questions/55482364/opengl-2d-textures-not-displaying-properly-c/55482415#55482415), [C++]  
+
+If an RGB image with 3 color channels is loaded into a texture object, [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) must be set to 1:
+
+<!-- language: cpp -->
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, imageData);
+
+`GL_UNPACK_ALIGNMENT` specifies the alignment requirements for the start of each pixel row in memory. By default `GL_UNPACK_ALIGNMENT` is set to 4.
+This means the start of each line of the image is assumed to be aligned to an address which is a multiple of 4. Since the image data is tightly packed and each pixel is 3 bytes in size, the alignment has to be changed.  
+If the width of the image is divisible by 4 (more exactly if `3*width` is divisible by 4) then the error is not noticeable.
+
+To proper read the image the last parameter of `stbi_load` has to be 0 (since the jpg format provides 3 color channesl) or 3 (to force 3 color channels):
+
+    unsigned char* imageData = stbi_load(filePath.c_str(),
+         &width, &height, &numComponents, 0);
+
 
 ---
 
@@ -836,7 +859,20 @@ See GLSL version 4.60 (most recent) (from [OpenGL Shading Language 4.60 Specific
 I recommend to use `samplerCubeArray` (see [Sampler](https://www.khronos.org/opengl/wiki/Sampler_(GLSL))) rather than an array of `samplerCube`.  
 When you use a `samplerCubeArray`, then you don't need any indexing at all, because the "index" is encoded in the 4th component of the texture coordinate at texture lookup (see [`texture`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/texture.xhtml)). 
 
+---
 
+[Accessing the index of an implicitly defined array in GLSL](https://stackoverflow.com/questions/67410447/accessing-the-index-of-an-implicitly-defined-array-in-glsl/67411999#67411999)
+
+You are getting the error because you have code that violates the specification. See the (most recent) [OpenGL Shading Language 4.60 Specification - 4.1.9. Arrays](https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.html#basic-types):
+
+> It is legal to declare an array without a size (unsized) and then later redeclare the same name as an array of the same type and specify a size, or **index it only with constant integral expressions** (implicitly sized).
+
+---
+
+What you try to do is not the create an implicitly-sized array, but an dynamically-sized array.
+
+It is not possible to create uniform array with a variable size. A variable size is just possible for the bottommost variable in a [Shader Storage Block](https://www.khronos.org/opengl/wiki/Interface_Block_(GLSL)#Shader_storage_blocks).  
+Anyway you should prefer to use an `sampler2DArray` instead of an array of `sampler2D`. With a sampler array, you must use a separate texture unit for each element, and the array index must be a [Dynamically uniform expression](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)#Dynamically_uniform_expression)  
 
 ## Texture format and texture swizzle
 
@@ -1705,7 +1741,7 @@ Texturing is enabled or disabled using the generic Enable and Disable commands, 
 [Alpha blending textures and primitives](https://stackoverflow.com/questions/52687369/alpha-blending-textures-and-primitives/52687512#52687512), [Fixed Function] [C++]  
 [All texture colors affected by colored rectangle - OpenGL](https://stackoverflow.com/questions/53180760/all-texture-colors-affected-by-colored-rectangle-opengl/53180908#53180908), [Fixed Function] [C++]  
 
-If texturing is enabled, then by default the color of the texel is multiplied by the current color, because by default the texture environment mode (`GL_TEXTURE_ENV_MODE`) is `GL_MODULATE`. See [`glTexEnv`](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTexEnv.xml).
+When texturing is activated, by default the color of the texel is multiplied by the current color, because by default the texture environment mode (`GL_TEXTURE_ENV_MODE`) is `GL_MODULATE`. See [`glTexEnv`](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTexEnv.xml).
 
 This causes that the color of the texels of the texture is "mixed" by the last color which you have set by [`glColor4f`](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glColor.xml).
 
@@ -1753,7 +1789,7 @@ GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, GL_RE
 
 [Texture and image handling with (py)OpenGL](https://stackoverflow.com/questions/54243031/texture-and-image-handling-with-pyopengl/54243162#54243162), [Python]  
 
-Two-dimensional texturing is enabled by [`glEnable(GL_TEXTURE_2D)`](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glEnable.xml) and can be disabled by `glDisable(GL_TEXTURE_2D)`.  
+Two-dimensional texturing has to enabled by [`glEnable(GL_TEXTURE_2D)`](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glEnable.xml) and can be disabled by `glDisable(GL_TEXTURE_2D)`.  
 If texturing is enables then the texture wich is currently bound when the geometry is drawn by the [`glBegin`/`glEnd`](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glBegin.xml) sequence is applied.
 
 When [`glVertex`](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glVertex.xml) is called, the the current texture coordinates are associated with the vertex coordinate. The texture coordinate is set by [`glTexCoord2f`](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTexCoord.xml).
