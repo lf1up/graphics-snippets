@@ -7,6 +7,36 @@ Robert C. Martin, Clean Architecture
 
 # Python examples
 
+[Python code snippets](../documentation/python_code_snippets.md)
+
+## Hello Triangle
+
+[Hello Triangle - GLUT](../example/python/opengl_hello_triangle/hello_triangle_glut.py)  
+[Hello Triangle - GLUT - OpenGL 4.1 core (macOS)](../example/python/opengl_hello_triangle/hello_triangle_glut_opengl_4_1_core.py)  
+[Hello Triangle - GLUT - immediate mode (legacy)](../example/python/opengl_hello_triangle/hello_triangle_glut_begin_end.py)  
+[Hello Triangle - GLFW](../example/python/opengl_hello_triangle/hello_triangle_glfw.py)  
+[Hello Triangle - GLFW - OpenGL 4.1 core (macOS)](../example/python/opengl_hello_triangle/hello_triangle_glfw_opengl_4_1_core.py)  
+[Hello Triangle - GLFW - immediate mode (legacy)](../example/python/opengl_hello_triangle/hello_triangle_glfw_begin_end.py)  
+[Hello Triangle - Pygame](../example/python/opengl_hello_triangle/hello_triangle_pygame.py)  
+[Hello Triangle - Pygame - OpenGL 4.1 core (macOS)](../example/python/opengl_hello_triangle/hello_triangle_pygame_opengl_4_1_core.py)  
+[Hello Triangle - Pygame - immediate mode (legacy)](../example/python/opengl_hello_triangle/hello_triangle_pygame_begin_end.py)  
+[Hello Triangle - tkinter](../example/python/opengl_hello_triangle/hello_triangle_tkinter.py)  
+[Hello Triangle - tkinter - immediate mode (legacy)](../example/python/opengl_hello_triangle/hello_triangle_tkinter_begin_end.py)  
+
+## Hello Cube
+
+[Hello Cube - GLUT](../example/python/opengl_hello_cube/hello_cube_glut.py)  
+[Hello Cube - GLUT - OpenGL 4.1 core (macOS)](../example/python/opengl_hello_cube/hello_cube_glut_opengl_4_1_core.py)  
+[Hello Cube - GLUT - immediate mode (legacy)](../example/python/opengl_hello_cube/hello_cube_glut_begin_end.py)  
+[Hello Cube - GLFW](../example/python/opengl_hello_cube/hello_cube_glfw.py)  
+[Hello Cube - GLFW - OpenGL 4.1 core (macOS)](../example/python/opengl_hello_cube/hello_cube_glfw_opengl_4_1_core.py)  
+[Hello Cube - GLFW - immediate mode (legacy)](../example/python/opengl_hello_cube/hello_cube_glfw_begin_end.py)  
+[Hello Cube - Pygame](../example/python/opengl_hello_cube/hello_cube_pygame.py)  
+[Hello Cube - Pygame - OpenGL 4.1 core (macOS)](../example/python/opengl_hello_cube/hello_cube_pygame_opengl_4_1_core.py)  
+[Hello Cube - Pygame - immediate mode (legacy)](../example/python/opengl_hello_cube/hello_cube_pygame_begin_end.py)  
+[Hello Cube - tkinter](../example/python/opengl_hello_cube/hello_cube_tkinter.py)  
+[Hello Cube - tkinter - immediate mode (legacy)](../example/python/opengl_hello_cube/hello_cube_tkinter_begin_end.py)  
+
 ## Examples
 
 ### Mesh
@@ -14,7 +44,8 @@ Robert C. Martin, Clean Architecture
 [OpenGL 4.6, Direct State Access (DSA), Spir-V Shader Program](https://github.com/Rabbid76/graphics-snippets/blob/master/example/python/dsa_spirv_cube/example_python_dsa_spirv.md)  
 [![OpenGL 4.6, Direct State Access (DSA), Spir-V Shader Program](../example/python/dsa_spirv_cube/image/cube_glut_glm_spirv.gif)](https://github.com/Rabbid76/graphics-snippets/blob/master/example/python/dsa_spirv_cube/example_python_dsa_spirv.md)
 
-[Mesh](../example/python/mesh/glut_opengl_shader_ctypes_glm_meshes.py)  
+[Mesh - glut](../example/python/mesh/glut_opengl_shader_ctypes_glm_meshes.py)  
+[Mesh - glfw](../example/python/mesh/glfw_opengl_shader_ctypes_glm_meshes.py)  
 [![Mesh](../screenshot/example/python/mesh/glut_opengl_shader_ctypes_glm_meshes.png)](../example/python/mesh/glut_opengl_shader_ctypes_glm_meshes.py)
 
 [Mesh in Tkinter frame](../example/python/mesh/tkinter_opengl_shader_ctypes_glm_meshes.py)  
@@ -27,6 +58,18 @@ Robert C. Martin, Clean Architecture
 [![Visualizing a 3D NumPy array with PyOpenGL](https://i.stack.imgur.com/twWaF.gif)](../example/python/mesh/glut_opengl_shader_instancing_array.py)
 
 [Draw elements](../example/python/mesh/glut_opengl_draw_elements.py)
+
+### Geometry shader
+
+[Geometry](../documentation/geometry.md)  
+[example/python/geometry_shader/geometry_001/geo.py](../example/python/geometry_shader/geometry_001/geo.py)  
+![Geometry](../documentation/image/geometry_001.gif)
+
+### Tessellation shader
+
+[Tessellation](../documentation/tessellation.md)  
+[example/python/tessellation_shader/tessellation_001/tess.py](../example/python/tessellation_shader/tessellation_001/tess.py)  
+![Tessellation](../documentation/image/tessellation_001.gif)
 
 ### Model, View and Projection
 
@@ -51,7 +94,10 @@ Robert C. Martin, Clean Architecture
 ### Parallax
 
 [Parallax](../example/python/parallax/glut_opengl_shader_glm_cube_parallax.py)  
-[![Parallax](../screenshot/example/python/parallax/glut_opengl_shader_glm_cube_parallax.png)](../example/python/parallax/glut_opengl_shader_glm_cube_parallax.py)  
+[![Parallax](../screenshot/example/python/parallax/glut_opengl_shader_glm_cube_parallax.png)](../example/python/parallax/glut_opengl_shader_glm_cube_parallax.py)
+
+[Relief mapping with geometry shader](../example/python/parallax/parallax_009_protruded_displ_mapping_geo_tbn/protruded_displ_mapping_geo_tbn.py)  
+[![Parallax](../screenshot/example/python/parallax/protruded_displ_mapping_geo_tbn.gif)](../example/python/parallax/parallax_009_protruded_displ_mapping_geo_tbn/protruded_displ_mapping_geo_tbn.py)
 
 ### SSAO
 

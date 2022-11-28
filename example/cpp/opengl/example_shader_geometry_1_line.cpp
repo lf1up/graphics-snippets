@@ -114,7 +114,7 @@ void main()
     vec4 p1 = gl_in[0].gl_Position;
     vec4 p2 = gl_in[1].gl_Position;
 
-    vec2 dir    = normalize((p2.xy - p1.xy) * u_viewportSize);
+    vec2 dir    = normalize((p2.xy/p2.w - p1.xy/p1.w) * u_viewportSize);
     vec2 offset = vec2(-dir.y, dir.x) * u_thickness / u_viewportSize;
 
     gl_Position = p1 + vec4(offset.xy * p1.w, 0.0, 0.0);
@@ -240,21 +240,18 @@ int main(void)
     GLint loc_col = glGetUniformLocation( prog.Prog(), "u_color" );
     GLint loc_thi = glGetUniformLocation( prog.Prog(), "u_thickness" );
 
-
     while (!glfwWindowShouldClose(wnd))
     {
-        static float angle = 1.0f;
-
         int vpSize[2];
         glfwGetFramebufferSize( wnd, &vpSize[0], &vpSize[1] );
         
         float ascpect = (float)vpSize[0] / (float)vpSize[1];
         float orthoX = ascpect > 1.0f ? ascpect : 1.0f;
-        float orthoY = ascpect > 1.0f ? 1.0f : 1.0 / ascpect;
+        float orthoY = ascpect > 1.0f ? 1.0f : 1.0f / ascpect;
 
         glm::mat4 project = glm::ortho( -orthoX, orthoX, -orthoY, orthoY, -1.0f, 1.0f );
         
-        float orthScale = ascpect > 1.0f ? 600.0 / vpSize[1] : 600.0 / vpSize[0];
+        float orthScale = ascpect > 1.0f ? 600.0f / vpSize[1] : 600.0f / vpSize[0];
         project = glm::scale(project, glm::vec3(orthScale, orthScale, 1.0f));
         
         project = glm::perspective( glm::radians( 120.0f ), ascpect, 0.1f, 10.0f );
@@ -266,20 +263,28 @@ int main(void)
         glm::vec3(0.0f, 1.0f, 0.0f));
 
         glm::mat4 model( 1.0f );
+        //float angle = 30.0f;
+        float angle = glfwGetTime() * 20.0f;
         model = glm::translate( model, glm::vec3(0.1f, 0.0f, 0.2f) );
         model = glm::rotate( model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f) );
-        angle += 1.0f;
         
         glUniformMatrix4fv( loc_mvp, 1, GL_FALSE, glm::value_ptr(project * view * model) );
         glUniform2f( loc_vps, (float)vpSize[0], (float)vpSize[1] );
-        glUniform4f( loc_col, 1.0f, 1.0f, 1.0f, 1.0f );
-        glUniform1f( loc_thi, 10.0f );
+        glUniform1f( loc_thi, 50.0f );
 
         glViewport( 0, 0, vpSize[0], vpSize[1] );
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-      
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glUniform4f(loc_col, 0.5f, 0.5f, 0.5f, 1.0f);
+        glDrawElements(GL_LINE_LOOP, (GLsizei)iarray.size(), GL_UNSIGNED_INT, nullptr);
+
+        glPolygonOffset(-1.0f, -1.0f);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glUniform4f(loc_col, 1.0f, 0.0f, 0.0f, 1.0f);
         glDrawElements( GL_LINE_LOOP, (GLsizei)iarray.size(), GL_UNSIGNED_INT, nullptr );
+        glPolygonOffset(0.0f, 0.0f);
 
         glfwSwapBuffers(wnd);
         glfwPollEvents();

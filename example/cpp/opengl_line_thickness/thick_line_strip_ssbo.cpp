@@ -1,5 +1,7 @@
-// Dashed line in OpenGL3?
-// [https://stackoverflow.com/questions/52928678/dashed-line-in-opengl3/54543267#54543267]
+// OpenGL Line Width
+// https://stackoverflow.com/questions/3484260/opengl-line-width/59688394#59688394
+// Drawing a line in modern OpenGL
+// https://stackoverflow.com/questions/60440682/drawing-a-line-in-modern-opengl/60440937#60440937
 
 
 // STL

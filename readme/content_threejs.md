@@ -7,6 +7,21 @@ Richard P. Feynman
 
 # three.js
 
+[Hello Cube](https://rabbid76.github.io/graphics-snippets/example/nodejs/three_js_examples/deployment/hello_cube)  
+[Examples](https://rabbid76.github.io/graphics-snippets/example/nodejs/three_js_examples/deployment/)  
+
+## Shadow
+
+[Contact shadow (ground shadow)](https://rabbid76.github.io/graphics-snippets/example/nodejs/three_js_examples/deployment/contact_shadow)  
+[RetAreaLight shadow](https://rabbid76.github.io/graphics-snippets/example/nodejs/three_js_examples/deployment/rect_area_light_shadow)  
+[Progressive shadow](https://rabbid76.github.io/graphics-snippets/example/nodejs/three_js_examples/deployment/progressive_shadow)
+
+## Ambient Occlusion
+
+[Screen Space Ambient Occlusion](https://rabbid76.github.io/graphics-snippets/example/nodejs/three_js_examples/deployment/screen_space_ambient_occlusion)
+
+## Frustum
+
 [![](../documentation/image/perspective_view_frustum.gif) Perspective Viewing Frustum](https://rabbid76.github.io/graphics-snippets/example/threejs/three_perspective.html)
 
 ## StackOverflow examples - three.js

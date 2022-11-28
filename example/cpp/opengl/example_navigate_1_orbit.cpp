@@ -132,7 +132,7 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
     glm::vec2 drag_vec = glm::vec2(xpos - drag_start.x, drag_start.y - ypos);
     
     glm::vec3 axis_vec = glm::normalize(to_world * glm::vec3(-drag_vec.y, drag_vec.x, 0));
-    GLfloat angle = glm::length(drag_vec) / height / 2 * M_PI;
+    GLfloat angle = (GLfloat)(glm::length(drag_vec) / height / 2 * M_PI);
     
     drag_rotation = glm::rotate(glm::mat4(1.0f), angle, axis_vec);
 }
@@ -174,7 +174,7 @@ int main(void)
         float ascpect = (float)width / (float)height;
         glm::mat4 project = glm::perspective(glm::radians(60.0f), ascpect, 0.1f, 20.0f);        
         glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(project));
-        glm::mat4 model = drag_rotation * model_rotation;
+        glm::mat4 model = drag_rotation* model_rotation;
 
         glViewport(0, 0, width, height);
         glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -332,7 +332,7 @@ VertexArrayObject VertexArrayObject::newVAO(const std::vector<GLfloat>& varray, 
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, iarray.size() * sizeof(*iarray.data()), iarray.data(), GL_STATIC_DRAW);
     }
     glBindVertexArray(0);
-    glDeleteBuffers(2, bufferObjects);
+    //glDeleteBuffers(2, bufferObjects); does not work with AMD Radeon hardware
 
     return vao;
 }

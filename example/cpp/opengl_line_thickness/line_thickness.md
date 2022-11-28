@@ -1,18 +1,18 @@
 
 # Line thickness questions
 
-[Drawing a line in modern OpenGL](https://stackoverflow.com/questions/60440682/drawing-a-line-in-modern-opengl/60440937#60440937)  
 [Drawing a variable width line in openGL (No glLineWidth)](https://stackoverflow.com/questions/101718/drawing-a-variable-width-line-in-opengl-no-gllinewidth)  
 [opengl glLineWidth() doesn't change size of lines](https://stackoverflow.com/questions/34866964/opengl-gllinewidth-doesnt-change-size-of-lines)  
 [Thickness of lines using THREE.LineBasicMaterial](https://stackoverflow.com/questions/11638883/thickness-of-lines-using-three-linebasicmaterial)  
 [Workaround for lack of line width on Windows when using Three.js](https://stackoverflow.com/questions/21067461/workaround-for-lack-of-line-width-on-windows-when-using-three-js)  
 [Detecting support for WebGL thick lines in browser](https://stackoverflow.com/questions/38333977/detecting-support-for-webgl-thick-lines-in-browser)  
 [OpenGL : thick and smooth/non-broken lines *in 3D*](https://stackoverflow.com/questions/36655888/opengl-thick-and-smooth-non-broken-lines-in-3d/36663605)  
-[Drawing a thick line with OpenGl in C++](https://stackoverflow.com/questions/56891248/drawing-a-thick-line-with-opengl-in-c/56891294#56891294)  
+[Drawing a thick line with legacy OpenGL (immediate mode) in C++](https://stackoverflow.com/questions/56891248/drawing-a-thick-line-with-legacy-opengl-immediate-mode-in-c/56891294#56891294)  
 
 # Answered
 
-[OpenGL Line Width](https://stackoverflow.com/questions/3484260/opengl-line-width)  
+[OpenGL Line Width](https://stackoverflow.com/questions/3484260/opengl-line-width/59688394#59688394)  
+[Drawing a line in modern OpenGL](https://stackoverflow.com/questions/60440682/drawing-a-line-in-modern-opengl/60440937#60440937)  
 [GLSL Geometry shader to replace glLineWidth](https://stackoverflow.com/questions/54686818/glsl-geometry-shader-to-replace-gllinewidth)  
 
 [OpenGL 3.2 Core Profile glLineWidth](https://stackoverflow.com/questions/8791531/opengl-3-2-core-profile-gllinewidth) 

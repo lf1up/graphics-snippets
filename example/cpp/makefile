@@ -18,7 +18,7 @@ renderDir = $(workspaceRoot)/cpp/include/render
 utilInc = -I./ -I$(utilDir)/include -I$(renderDir)
 
 # GLM
-glmDir = ${workspaceRoot}/../_cpp_extern/glm-0.9.9.3/glm
+glmDir = ${workspaceRoot}/../_cpp_extern/glm-0.9.9.8/glm
 glmInc = -I$(glmDir)
 
 # STB
@@ -27,7 +27,7 @@ stbInc = -I$(stbDir)
 
 # GLEW
 glewDir = $(workspaceRoot)/example/cpp/_glew
-glewInc = -D GLEW_STATIC -I$(glewDir)/include
+glewInc = -DGLEW_STATIC -I$(glewDir)/include
 #glewLib = -L$(glewDir)/lib -lglew32
 glewLib = -L$(glewDir)/lib -lglew64
 
@@ -43,7 +43,7 @@ glutLib = -L${freeglutDir}/lib/x64 -lfreeglut -Wl,--subsystem,windows
 
 # GLFW [https://www.glfw.org/]
 #glfwDir = ${workspaceRoot}/../_cpp_extern/glfw-3.2.1.bin.WIN32
-glfwDir = ${workspaceRoot}/../_cpp_extern/glfw-3.2.1.bin.WIN64
+glfwDir = ${workspaceRoot}/../_cpp_extern/glfw-3.3.6.bin.WIN64
 glfwInc = -I${glfwDir}/include
 #glfwLib = -L${glfwDir}/lib-mingw -lglfw3
 glfwLib = -L${glfwDir}/lib-mingw-w64 -lglfw3

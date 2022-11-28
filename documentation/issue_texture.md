@@ -259,10 +259,11 @@ A [Windows Bitmap](https://de.wikipedia.org/wiki/Windows_Bitmap) file has a file
 
 [Calculating texture coordinates from a heightmap](https://stackoverflow.com/questions/55739024/calculating-texture-coordinates-from-a-heightmap/55739265#55739265), [C++]  
 
-**By default OpenGL assumes that the start of each row of an image is aligned to 4 bytes**.
+**By default, OpenGL assumes that the beginning of each line of an image is aligned to 4 bytes**.
 
-**This is because the [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) parameter by default is 4. Since the image has 3 color channels (`GL_RGB`), and is tightly packed the size of a row of the image may not be aligned to 4 bytes**.  
-**When a RGB image with 3 color channels is loaded to a texture object and 3*width is not divisible by 4, [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) has to be set to 1, before specifying the texture image with  `glTexImage2D`**:
+**This is because the [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) parameter is 4 by default. Since the image has 3 color channels (GL_RGB) and is tightly packed, the size of one line of the image may not be aligned to 4 bytes.**.  
+**If an RGB image with 3 color channels is loaded into a texture object and 3*width is not divisible by 4, [`GL_UNPACK_ALIGNMENT`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml) must be set to 1 before specifying the texture image with `glTexImage2D`**.  
+Otherwise, the image memory data is accessed outside the allowed range, resulting in an exception, or the lines of the image are misaligned, resulting in a shift effect after each line.
 
 ```cpp
 glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -504,12 +505,11 @@ gl2.glTexImage3D(GL2.GL_TEXTURE_3D, 0, GL2.GL_R16F, nCols, nRows, nSlices, 0, GL
 
 # GLSL
 
-[GLSL 4.60 Specification - 4.1.7. Opaque Types
- (page 34)](https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf#page=27&zoom=100,0,397)
+See [GLSL 4.60 Specification - 4.1.7. Opaque Types](https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.html#basic-types)
 
-> Texture-combined sampler types are opaque types, declared and behaving as described above for opaque types. When aggregated into arrays within a shader, they can only be indexed with a dynamically uniform integral expression, otherwise results are undefined. [...]
+> [...] Texture-combined sampler types are opaque types, [...]. When aggregated into arrays within a shader, they can only be indexed with a dynamically uniform integral expression, otherwise results are undefined.
 
-In later version, the index to an array of samplers has to be "dynamically uniform". This means the index has to be the "same" for all fragments (e.g. a constant or a uniform variable).
+This means the index has to be the "same" for all fragments (e.g. a constant or a uniform variable).
 
 [GLSL ES 3.20 Specification - 4.1.11. Opaque Types (page 32)](https://www.khronos.org/registry/OpenGL/specs/es/3.2/GLSL_ES_Specification_3.20.pdf)  
 
@@ -543,14 +543,49 @@ In later version, the index to an array of samplers has to be "dynamically unifo
 
 [GLSL ES 3.20 Specification - 4.1.11. Opaque Types (page 32)](https://www.khronos.org/registry/OpenGL/specs/es/3.2/GLSL_ES_Specification_3.20.pdf)  
 
-> When aggregated into arrays within a shader, opaque types can only be indexed with a dynamically uniform integral expression. [...]
-
+> When aggregated into arrays within a shader, opaque types can only be indexed with a dynamically uniform integral expression. [...]  
 > [...] Sampler types (e.g. **sampler2D**) are opaque types [...]
 
 [GLSL 4.60 Specification - 3.8.2. Dynamically Uniform Expressions (page 20)](https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf)  
 [GLSL ES 3.20 Specification - 3.9.3. Dynamically Uniform Expressions (page 22)](https://www.khronos.org/registry/OpenGL/specs/es/3.2/GLSL_ES_Specification_3.20.pdf)  
 
 > A fragment-shader expression is dynamically uniform if all fragments evaluating it get the same resulting value. 
+
+---
+
+[OpenGL sampler2D array](https://stackoverflow.com/questions/72648980/opengl-sampler2d-array/72649578#72649578)
+
+You cannot use a fragment shader input variable to index an array of texture samplers. You have to use a `sampler2DArray` (`GL_TEXTURE_2D_ARRAY`) instead of an array of `sampler2D` (`GL_TEXTURE_2D`).
+
+>```glsl
+>int index = int(v_texIndex);
+>vec4 texColor = texture(u_Textures[index], v_TexCoord);
+>```
+
+is undefined behavior because `v_texIndex` is a fragment shader input variable and therefore not a [dynamically uniform expression](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)#Dynamically_uniform_expression). See [GLSL 4.60 Specification - 4.1.7. Opaque Types](https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.html#basic-types)
+
+> [...] Texture-combined sampler types are opaque types, [...]. When aggregated into arrays within a shader, they can only be indexed with a dynamically uniform integral expression, **otherwise results are undefined**.
+
+---
+
+Example using `sampler2DArray`:
+
+```glsl
+#version 450 core
+layout(location = 0) out vec4 color;
+
+in vec2 v_TexCoord;
+in float v_texIndex;
+
+uniform sampler2DArray u_Textures;
+
+void main() 
+{
+    color = texture(u_Textures, vec3(v_TexCoord.xy, v_texIndex));
+}
+```
+
+[`texture`](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/texture.xhtml) is overloaded for all sampler types. The texture coordinates and texture layer need not to dynamically uniform, but the index into a sampler array has to be dynamically uniform.
 
 ---
 

@@ -9,12 +9,19 @@ Robert C. Martin, Clean Architecture
 
 [C++ code snippets](../documentation/cpp_code_snippets.md)
 
+## Hello Triangle
+
+[Hello Triangle - GLFW](../example/cpp/hello_triangle/hello_triangle_glfw/hello_triangle_glfw.cpp)  
+
 ## Thick lines
 
 [Thick lines with OpenGL core profile](../documentation/thick_line_shader.md)
 
 [thick line strip ssbo](../example/cpp/opengl_line_thickness/thick_line_strip_ssbo.cpp)  
 [![thick_line_strip_ssbo](../documentation/image/thick_line_2.png)](../example/cpp/opengl_line_thickness/dashed_line_strip.cpp)  
+
+[thick line, geometry shader](../example/cpp/opengl/example_shader_geometry_1_line.cpp)  
+[![thick line, geometry shader](https://i.stack.imgur.com/awwMM.png)](../example/cpp/opengl/example_shader_geometry_1_line.cpp)  
 
 ## Dashed lines
 
@@ -46,6 +53,11 @@ Robert C. Martin, Clean Architecture
 
 [example_navigate_1_orbit](../example/cpp/opengl/example_navigate_1_orbit.cpp)  
 [![example_navigate_1_orbit](../screenshot/example/cpp/opengl/example_navigate_1_orbit.gif)](../example/cpp/opengl/example_navigate_1_orbit.cpp)  
+
+
+## Rubik's Cube
+
+[rubiks_cube_glfw](../example/cpp/opengl_render_utility/rubiks_cube_glfw.cpp)  
 
 ## OpenGL 4 Examples
 
@@ -84,8 +96,20 @@ Robert C. Martin, Clean Architecture
 
 ---
 
+[example_noise_1](../example/cpp/opengl/example_noise_1.cpp)  
 [![example_noise_1](../screenshot/example/cpp/opengl/example_noise_1.png)](../example/cpp/opengl/example_noise_1.cpp)  
-[example_noise_1](../example/cpp/opengl/example_noise_1.cpp)
+
+---
+
+[example_freeglut_text_freetype](../example/cpp/opengl/example_freeglut_text_freetype.cpp)  
+[![example_freeglut_text_freetype](../screenshot/example/cpp/opengl/example_freeglut_text_freetype.png)](../example/cpp/opengl/example_freeglut_text_freetype.cpp)  
+
+---
+
+[example_glfw_text_freetype](../example/cpp/opengl/example_glfw_text_freetype.cpp)  
+[![example_glfw_text_freetype](../screenshot/example/cpp/opengl/example_glfw_text_freetype.png)](../example/cpp/opengl/example_glfw_text_freetype.cpp)  
+
+---
 
 ## Immediate mode (Legacy) OpenGL examples
 
