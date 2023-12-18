@@ -6,32 +6,36 @@
     "install:ncu": "npm install -g npm-check-updates",
     "install:webpack": "npm install --save-dev webpack",
     "update:modules": "ncu -u && npm update && npm i",
+    "copy:wasm": "copyfiles --flat ./wasm/*.wasm ./dist/client/test_constructive_solid_geometry/ && copyfiles --flat ./wasm/*.wasm ./dist/client/test_triangle_intersection/ && copyfiles --flat ./wasm/*.wasm ./dist/client/boolean_3d_operations/",
+    "build:wasm": "./buildCpp.sh wasm && copyfiles --flat ./buildWasm/MeshUtility*.* ./wasm && npm run copy:wasm",
     "build:client": "webpack --config ./src/client/webpack.prod.js",
     "build:server": "tsc -p ./src/server",
+    "build:all": "npm run build:wasm && npm run build:client && npm run build:server",
     "build": "npm run build:client && npm run build:server",
     "dev": "webpack serve --config ./src/client/webpack.dev.js",
     "start": "node ./dist/server/three_server.js",
-    "copy:deploy": "copyfiles --flat ./dist/client/*.js ./deployment"
+    "copy:deploy": "copyfiles --flat ./dist/client/*.js ./deployment  && copyfiles --flat ./wasm/*.wasm ./deployment/boolean_3d_operations/ && copyfiles --flat ./wasm/*.wasm ./deployment/test_constructive_solid_geometry/"
   },
   "author": "Rabbid76",
   "license": "ISC",
   "devDependencies": {
-    "@types/dat.gui": "^0.7.7",
-    "@types/express": "^4.17.14",
-    "@types/node": "^18.11.9",
-    "@types/three": "^0.146.0",
+    "@types/dat.gui": "^0.7.12",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.4",
+    "@types/three": "^0.159.0",
     "copyfiles": "^2.4.1",
-    "dat.gui": "^0.7.9",
     "install-peers": "^1.0.4",
-    "three": "^0.146.0",
-    "ts-loader": "^9.4.1",
-    "typescript": "^4.8.4",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.11.1",
-    "webpack-merge": "^5.8.0"
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "webpack-merge": "^5.10.0"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "build": "^0.1.4",
+    "dat.gui": "^0.7.9",
+    "express": "^4.18.2",
+    "three": "^0.159.0"
   }
 }

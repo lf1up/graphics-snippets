@@ -18,7 +18,11 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#define CONTEXT_INFORMATION_AND_DEBUG_OUTPUT
+
+#ifdef CONTEXT_INFORMATION_AND_DEBUG_OUTPUT
 #include "../gl_debug.h"
+#endif
 
 #include <chrono>
 #include <fstream>
@@ -91,7 +95,7 @@ int main()
     glewExperimental = true;
 #endif
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, debug_context ? GLFW_TRUE : GLFW_FALSE);
-    GLFWwindow *wnd = glfwCreateWindow(800, 600, "GLFW OGL window", nullptr, nullptr);
+    GLFWwindow *wnd = glfwCreateWindow(800, 600, "GLFW OGL window - Hello triangle", nullptr, nullptr);
     if ( wnd == nullptr )
     {
         glfwTerminate();
@@ -102,9 +106,11 @@ int main()
     if (glewInit() != GLEW_OK)
         throw std::runtime_error( "error initializing glew" );
 
+#ifdef CONTEXT_INFORMATION_AND_DEBUG_OUTPUT
     OpenGL::CContext::TDebugLevel debug_level = debug_context ? OpenGL::CContext::TDebugLevel::all : OpenGL::CContext::TDebugLevel::off;
     OpenGL::CContext context;
     context.init(debug_level);
+#endif
 
     //glfwSwapInterval( 2 );
 

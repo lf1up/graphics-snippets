@@ -74,11 +74,13 @@ Lloyd Alexander, The Book of Three
 This repository contains examples of rendering with OpenGL and WebGL in multiple languages.
 It does not contain an application, just a collection of examples. Initially I just wanted to bring order to a bunch of examples on my local drive.
 
-# Interior
+# Interior 
 
 [WebGL](readme/content_webgl.md)
 
 [three.js](readme/content_threejs.md)
+
+[three.js GLB/GLTF viewer](https://rabbid76.github.io/threejs-gltf-glb-viewer/deploy/)
 
 [Python examples](readme/content_python.md)
 
