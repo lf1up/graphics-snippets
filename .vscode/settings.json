@@ -1,6 +1,7 @@
 {
-    "files.associations": {
-        "*.js": "javascriptreact",
-        "iostream": "cpp"
+    "cmake.configureOnOpen": true,
+    "cmake.sourceDirectory": "${workspaceFolder}/example/cpp",
+    "cmake.debugConfig": {
+        "cwd": "${workspaceFolder}"
     }
 }
